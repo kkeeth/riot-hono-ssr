@@ -36,12 +36,20 @@ app.use(express.static('public'))
 // routing
 app.get('/', async (req, res) => {
   const { html, css } = await ssr('hello', {})
-  res.send(template(page)({ html, css }))
+  res.send(template(page)({
+    html,
+    css,
+    title: 'Riot App'
+  }))
 })
 
 app.get('/:page', (req, res) => {
   const { html, css } = ssr(req.params.page, {})
-  res.send(template(page)({ html, css }))
+  res.send(template(page)({
+    html,
+    css,
+    title: 'Error Page'
+  }))
 })
 
 app.listen(8080, () => {
