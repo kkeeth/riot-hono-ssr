@@ -1,0 +1,23 @@
+<hello>
+  <h1>Hello from <span>Riot</span> pre-compoiled tag.</h1>
+
+  <script>
+    export default {
+      onAsyncRendering(resolve, reject) {
+        console.log("rendering!!")
+        resolve()
+      }
+    }
+  </script>
+
+  <style>
+    h1 {
+      font-family: futura;
+    }
+    span {
+      color: #e943of;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</hello>
