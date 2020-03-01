@@ -1,6 +1,10 @@
 import express from 'express'
-import { render, renderAsync } from '@riotjs/ssr'
+import { fragments, renderAsyncFragments } from '@riotjs/ssr'
 import register from '@riotjs/ssr/register'
+import template from 'lodash.template'
+import { readFileSync } from 'fs'
+
+const page = readFileSync('./index.html', 'utf8')
 
 // register .riot extension
 register()
@@ -9,28 +13,35 @@ register()
 const ssr = (file, obj) => {
   try {
     // load riot file
-    const tag = require(`./components/${file}.riot`).default
+    const RiotTag = require(`./pages/${file}.riot`).default
     // rendering
-    return renderAsync(tag.name, tag, obj)
+    return renderAsyncFragments(RiotTag.name, RiotTag, obj)
   } catch (e) {
-    console.log(e)
-   // return file !== 'notfound' ? ssr('not-found', e) : {};
+    if (e.code === 'MODULE_NOT_FOUND') {
+      const NotFound = require('./pages/not-found.riot').default
+      return fragments('not-found', NotFound, { params: e })
+    }
+    else {
+      const Error = require('./pages/error.riot').default
+      return fragments('error', Error, { params: e })
+    }
   }
 };
+
+// express instance
 const app = express()
 
 app.use(express.static('public'))
 
 // routing
-app.get('/', (req, res) => {
-  ssr('hello', {})
-    .then(html => {
-      res.send(html)
-    })
-    .catch(e => {
-      const Error = require('./components/error.riot').default
-      res.send(render('error', Error, { params: e }))
-    })
+app.get('/', async (req, res) => {
+  const { html, css } = await ssr('hello', {})
+  res.send(template(page)({ html, css }))
+})
+
+app.get('/:page', (req, res) => {
+  const { html, css } = ssr(req.params.page, {})
+  res.send(template(page)({ html, css }))
 })
 
 app.listen(8080, () => {
