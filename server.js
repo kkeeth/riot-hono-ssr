@@ -38,6 +38,8 @@ app.use(express.static('public'))
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 // Etag
 app.set('etag', false)
+// x-powered-by
+app.set('x-powered-by', false)
 
 // routing
 app.get('/', async (req, res) => {
