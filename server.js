@@ -3,6 +3,8 @@ import { fragments, renderAsyncFragments } from '@riotjs/ssr'
 import register from '@riotjs/ssr/register'
 import template from 'lodash.template'
 import { readFileSync } from 'fs'
+import path from 'path'
+import favicon from 'serve-favicon'
 
 const page = readFileSync('./index.html', 'utf8')
 
@@ -30,8 +32,12 @@ const ssr = (file, obj) => {
 
 // express instance
 const app = express()
-
+// static directory path
 app.use(express.static('public'))
+// favicon
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+// Etag
+app.set('etag', false)
 
 // routing
 app.get('/', async (req, res) => {
