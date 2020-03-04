@@ -12,10 +12,13 @@
     "@babel/core": "^7.8.6",
     "@babel/node": "^7.8.4",
     "@babel/preset-env": "^7.8.6",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "opener": "^1.5.1"
   },
   "scripts": {
-    "start": "nodemon --ext js,riot --exec babel-node server.js"
+    "browser": "opener http://localhost:8080",
+    "server": "nodemon --ext js,riot --exec babel-node server.js",
+    "start": "npm-run-all -p server browser"
   },
   "keywords": [],
   "author": "kkeeth <zensin0082@gmail.com>",
