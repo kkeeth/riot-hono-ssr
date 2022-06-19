@@ -8,7 +8,7 @@ See also
 
 ## Usage
 
-```
+```bash
 # install modules
 $ yarn
 
